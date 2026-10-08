@@ -1,0 +1,6 @@
+{
+  "name": "صفحة تسجيل الدخول لشبكات المايكروتك ومستخرج القوالب",
+  "description": "بوابة تسجيل الدخول الذكية لشبكات المايكروتك Hotspot، إدارة وتوليد كروت الشحن، وفك ضغط ومعاينة وتصدير قوالب المايكروتك بالكامل.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
