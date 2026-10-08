@@ -125,10 +125,8 @@ $(function () {
 	
 	 // for the status page
 	if ($('body#status').length) {
-		var stQuran = $('.quran').offset().top - 10,
-			stAthdan = $('.athdan').offset().top - 10,
-			stMasbaha = $('.masbaha').offset().top - 10,
-			stAthkar = $('.athkar').offset().top - 10;
+		var stQuran = $('.quran').length ? $('.quran').offset().top - 10 : 0,
+			stMasbaha = $('.masbaha').length ? $('.masbaha').offset().top - 10 : 0;
 
 		var $links = $('header').find('li');
 
@@ -147,19 +145,7 @@ $(function () {
 
 				case 1:
 					$('html, body').animate({
-						scrollTop: stAthdan
-					}, 1100);
-					break;
-
-				case 2:
-					$('html, body').animate({
 						scrollTop: stMasbaha
-					}, 1100);
-					break;
-
-				case 3:
-					$('html, body').animate({
-						scrollTop: stAthkar
 					}, 1100);
 					break;
 			}
