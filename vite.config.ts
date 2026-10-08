@@ -102,10 +102,7 @@ export default defineConfig(() => {
 
             // Intercept and inject shim into all HTML responses
             if (url.endsWith('.html') || url === '/') {
-              let targetHtmlPath = url === '/' ? path.join(__dirname, 'index.html') : path.join(__dirname, url);
-              if (!fs.existsSync(targetHtmlPath)) {
-                targetHtmlPath = path.join(__dirname, 'yyyy', url.replace(/^\//, ''));
-              }
+              const targetHtmlPath = url === '/' ? path.join(__dirname, 'index.html') : path.join(__dirname, url);
               if (fs.existsSync(targetHtmlPath) && fs.statSync(targetHtmlPath).isFile()) {
                 let content = fs.readFileSync(targetHtmlPath, 'utf8');
 
@@ -150,105 +147,62 @@ export default defineConfig(() => {
               }
             }
 
-            // Simulated login handler (accepts /login, /yyyy/login, link-login-only, and any POST login)
+            // Simulated login handler (accepts /login, link-login-only, and any POST login)
             if (
               url === '/login' ||
-              url === '/yyyy/login' ||
               url.includes('link-login') ||
               url.includes('$(') ||
               (req.method === 'POST' && url.includes('login'))
             ) {
-              const referer = req.headers.referer || '';
-              const target = referer.includes('/yyyy/') ? '/yyyy/status.html' : '/status.html';
-              res.writeHead(302, { Location: target });
+              res.writeHead(302, { Location: '/status.html' });
               res.end();
               return;
             }
 
             // Simulated logout handler
-            if (url === '/logout' || url === '/yyyy/logout' || url.includes('link-logout')) {
-              const referer = req.headers.referer || '';
-              const target = referer.includes('/yyyy/') ? '/yyyy/login.html' : '/login.html';
-              res.writeHead(302, { Location: target });
+            if (url === '/logout' || url.includes('link-logout')) {
+              res.writeHead(302, { Location: '/login.html' });
               res.end();
               return;
             }
 
             // md5.js resolution (usually requested as /md5.js)
             if (url.endsWith('/md5.js') || url === '/md5.js') {
-              const candidates = [
-                path.join(__dirname, 'img/js/md5.js'),
-                path.join(__dirname, 'yyyy/img/js/md5.js'),
-              ];
-              for (const c of candidates) {
-                if (fs.existsSync(c)) {
-                  res.setHeader('Content-Type', 'application/javascript; charset=utf-8');
-                  fs.createReadStream(c).pipe(res);
-                  return;
-                }
-              }
-            }
-
-            // welcome.mp3 fallback (ayah.mp3 or onlogin.mp3)
-            if (url.endsWith('welcome.mp3')) {
-              const candidates = [
-                path.join(__dirname, 'ayah.mp3'),
-                path.join(__dirname, 'yyyy/ayah.mp3'),
-                path.join(__dirname, 'onlogin.mp3'),
-                path.join(__dirname, 'yyyy/onlogin.mp3'),
-              ];
-              for (const c of candidates) {
-                if (fs.existsSync(c)) {
-                  res.setHeader('Content-Type', 'audio/mpeg');
-                  fs.createReadStream(c).pipe(res);
-                  return;
-                }
+              const candidate = path.join(__dirname, 'img/js/md5.js');
+              if (fs.existsSync(candidate)) {
+                res.setHeader('Content-Type', 'application/javascript; charset=utf-8');
+                fs.createReadStream(candidate).pipe(res);
+                return;
               }
             }
 
             // banner2.jpg fallback
             if (url.endsWith('banner2.jpg')) {
-              const candidates = [
-                path.join(__dirname, 'img/banner3.jpg'),
-                path.join(__dirname, 'yyyy/img/banner3.jpg'),
-                path.join(__dirname, 'img/banner1.jpg'),
-              ];
-              for (const c of candidates) {
-                if (fs.existsSync(c)) {
-                  res.setHeader('Content-Type', 'image/jpeg');
-                  fs.createReadStream(c).pipe(res);
-                  return;
-                }
+              const candidate = path.join(__dirname, 'img/banner3.jpg');
+              if (fs.existsSync(candidate)) {
+                res.setHeader('Content-Type', 'image/jpeg');
+                fs.createReadStream(candidate).pipe(res);
+                return;
               }
             }
 
             // favicon.png fallback to favicon.ico
             if (url.endsWith('favicon.png')) {
-              const candidates = [
-                path.join(__dirname, 'favicon.ico'),
-                path.join(__dirname, 'yyyy/favicon.ico'),
-              ];
-              for (const c of candidates) {
-                if (fs.existsSync(c)) {
-                  res.setHeader('Content-Type', 'image/x-icon');
-                  fs.createReadStream(c).pipe(res);
-                  return;
-                }
+              const candidate = path.join(__dirname, 'favicon.ico');
+              if (fs.existsSync(candidate)) {
+                res.setHeader('Content-Type', 'image/x-icon');
+                fs.createReadStream(candidate).pipe(res);
+                return;
               }
             }
 
             // Serve raw CSS files directly to avoid strict PostCSS parsing issues
             if (url.endsWith('.css')) {
-              const candidates = [
-                path.join(__dirname, url),
-                path.join(__dirname, 'yyyy', url.replace(/^\//, '')),
-              ];
-              for (const c of candidates) {
-                if (fs.existsSync(c) && fs.statSync(c).isFile()) {
-                  res.setHeader('Content-Type', 'text/css; charset=utf-8');
-                  fs.createReadStream(c).pipe(res);
-                  return;
-                }
+              const candidate = path.join(__dirname, url);
+              if (fs.existsSync(candidate) && fs.statSync(candidate).isFile()) {
+                res.setHeader('Content-Type', 'text/css; charset=utf-8');
+                fs.createReadStream(candidate).pipe(res);
+                return;
               }
             }
 
@@ -256,9 +210,7 @@ export default defineConfig(() => {
             if (url.endsWith('.js')) {
               const candidates = [
                 path.join(__dirname, url),
-                path.join(__dirname, 'yyyy', url.replace(/^\//, '')),
                 path.join(__dirname, url.replace(/\/js\//, '/img/js/')),
-                path.join(__dirname, 'yyyy', url.replace(/^\//, '').replace(/^js\//, 'img/js/')),
               ];
               for (const c of candidates) {
                 if (fs.existsSync(c) && fs.statSync(c).isFile()) {

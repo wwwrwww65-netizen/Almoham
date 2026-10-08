@@ -23,7 +23,7 @@ _ https://fb.com/Almo7aya _
 	<link rel="shortcut icon" type="image/png" href="img/favicon.png"/>
 
 
-	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable" />
 	<!--
 
 	<link href="https://fonts.googleapis.com/css?family=Cairo" rel="stylesheet">
@@ -37,10 +37,22 @@ _ https://fb.com/Almo7aya _
 	<!--The style file will auto create by ruby with sass-->
     <link href="css/style.css" rel="stylesheet">
 
+	 <!-- start micro -->
+    <script language="JavaScript">
+
+      function openLogin() {
+	    if (window.name != 'hotspot_logout') return true;
+	    open('$(link-login)', '_blank', '');
+	    window.close();
+	    return false;
+       }
+
+     </script>
+	<!-- end micro -->
+	
 
   </head>
-  <body id="masbaha">
-
+  <body id="logout">
 	<main>
 
 	  <span id="top">
@@ -53,78 +65,84 @@ _ https://fb.com/Almo7aya _
 	  <header class="header">
 		<div class="container noborder">
 
+		
 		   <img src="img/alnajm.png" width="200px"/>
 
-		
+
 
 
 <p>
 
 مرحبا بكم في شبكه الاحمدي نت اللاسلكية 
 </P>
-
-		  <ul>
-
-			<li><a href="login.html"> الرئيسية </a></li>
-
-		  </ul>
-
-
 		</div>
 	  </header>
 	  <!--end header-->
 
-	  <hr />
+	  <!--start section-->
+	  <section class="login-form paddMore">
+		<div class="container">
 
-	  <div class="athkar-page">
-		<div class="container noborder">
+		  <h3> لقد تم تسجيل الخروج بنجاح </h3>
 		  
+		  <p> عنوان <bdi>IP</bdi> ->
+		  
+			 $(ip)
+		  </p>
+		  
+		  <p> عنوان <bdi>MAC</bdi> ->
 			
-		  <h1> قريبا  </h1>
+			$(max)
+		  </p>
 		  
-		
+		  <p> مدت الجلسة 
+			->
+			$(uptime)
+		  </p>
 		  
-		  <h3> خدمة سلفني </h3>
+		  $(if session-time-left)
+		  <p> الوقت المتبقي 
+			->
+			$(session-time-left)
+		  </p>
+		  $(endif)
 		  
-		  <ul>
-			
-			<li>
-خدمة سلفني هي خدمة تتيح لك اخذ سلفة في حالة كنت في حاجة الى الانترنت وسدادها في وقت اخر
-.
-</li>
-
-			
-		  </ul>
-			
+		  <p> كمية التحميل 
+			->
+			$(bytes-in-nice)
+		  </p>
 		  
-		  <button id="loan-button" type="button" class="button app-submit extra-submit">
-    
-		    
-لطلب خدمة سلفني اصغط هنا
-
- <i class="button-icon fas icon-left-open"></i>
-</button>
+		  <p> كمية الرفع 
+			->
+		    $(bytes-out-nice)
+		  </p>
 		  
-
-
+		  <form action="$(link-login)" name="login" onSubmit="return openLogin()">
+			<input class="btn" type="submit" value=" تسجيل الدخول ">
+		  </form>
+		  
 		</div>
-	  </div>
- 
+
+	  </section>
+
+	  <br />
+
+	  <br />
+
+
 	  <!--start footer and my name (;-->
 
 	  <footer id="fo">
 		<div class="container noborder">
 
-		  
-
 
 		  <p> <a target="_blank" href="https://fb.com/Almo7aya">شبكة الاحمدي نت اللاسلكيه</a></p>
-
 		  
 		  <p> 	
-      <marquee direction="right" style="color: #fff">تركيب وصيانة وتطوير الشبكات اللاسلكية :- م/عمارعقبات للتواصل اتصل على 772401402
+     
+         <marquee direction="right" style="color: #fff">تركيب وصيانة وتطوير الشبكات اللاسلكية :- م/عمارعقبات للتواصل 772401402 
 </marquee>
-    </p>
+    </p>	 
 
 		</div>
 	  </footer>
@@ -133,12 +151,12 @@ _ https://fb.com/Almo7aya _
 
 
 	</main>
+	
 
 	<!--add jQuery lib-->
 	<script src="js/jquery.js"></script>
 	<!--main javascript file-->
 	<script src="js/index.js"></script>
- <script src="js/init.min.js"></script><script src="js/main.min.js"></script>
-    <script src="js/loan.min.js"></script>
+
   </body>
 </html>
