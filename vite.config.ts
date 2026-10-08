@@ -123,6 +123,8 @@ export default defineConfig(() => {
                   .replace(/\$\(session-time-left\)/g, '4h 15m')
                   .replace(/\$\(remain-bytes-total\)/g, '524288000')
                   .replace(/\$\(refresh-timeout-secs\)/g, '60')
+                  .replace(/<!--\s*\$\(if refresh-timeout\)[\s\S]*?\$\(endif\)\s*-->/g, '')
+                  .replace(/\$\(if refresh-timeout\)[\s\S]*?\$\(endif\)/g, '')
                   .replace(/\$\(if chap-id\)[\s\S]*?\$\(endif\)/g, '')
                   .replace(/\$\(if error\)[\s\S]*?\$\(endif\)/g, '');
 

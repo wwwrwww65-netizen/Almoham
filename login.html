@@ -381,78 +381,260 @@
       </marquee>
     </div>
 
-    <!-- Pricing Section (باقات الأسعار) -->
-    <section class="secondary-card prices-section" id="prices-section">
-      <h3 class="section-title">
-        <span class="title-gem">💎</span> باقات الأسعار
-      </h3>
-      <div class="table-responsive">
-        <table class="styled-prices-table" id="main-table">
-          <thead>
-            <tr>
-              <th>السعر</th>
-              <th>المدة</th>
-              <th>الصلاحية</th>
-              <th>التحميل</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td class="price-cell">100</td>
-              <td>5 ساعات</td>
-              <td>5 أيام</td>
-              <td>400 MB</td>
-            </tr>
-            <tr>
-              <td class="price-cell">200</td>
-              <td>10 ساعات</td>
-              <td>5 أيام</td>
-              <td>800 MB</td>
-            </tr>
-            <tr>
-              <td class="price-cell">250</td>
-              <td>15 ساعة</td>
-              <td>10 أيام</td>
-              <td>1024 MB</td>
-            </tr>
-            <tr>
-              <td class="price-cell">500</td>
-              <td>30 ساعة</td>
-              <td>20 يوم</td>
-              <td>2 GB</td>
-            </tr>
-          </tbody>
-        </table>
+    <!-- 3 Modern Action Buttons Grid (نقاط البيع - أسعار الكروت - جديدنا والعروض) -->
+    <section class="modal-triggers-section" aria-label="أقسام إضافية ومعلومات">
+      <div class="modal-triggers-grid">
+        <!-- 1. نقاط البيع -->
+        <button type="button" class="modal-trigger-btn" onclick="openPortalModal('modalPoints')" aria-haspopup="dialog" aria-controls="modalPoints">
+          <div class="trigger-btn-icon-wrap trigger-icon-points">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+              <circle cx="12" cy="10" r="3"></circle>
+            </svg>
+          </div>
+          <span class="trigger-btn-title">نقاط البيع</span>
+          <span class="trigger-btn-subtitle">مراكز التسوق والتوزيع</span>
+        </button>
+
+        <!-- 2. أسعار الكروت -->
+        <button type="button" class="modal-trigger-btn" onclick="openPortalModal('modalPrices')" aria-haspopup="dialog" aria-controls="modalPrices">
+          <div class="trigger-btn-icon-wrap trigger-icon-prices">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="6 2 18 2 22 7 12 22 2 7 6 2"></polygon>
+              <line x1="2" y1="7" x2="22" y2="7"></line>
+              <line x1="12" y1="22" x2="12" y2="7"></line>
+            </svg>
+          </div>
+          <span class="trigger-btn-title">أسعار الكروت</span>
+          <span class="trigger-btn-subtitle">جدول الباقات</span>
+        </button>
+
+        <!-- 3. جديدنا والعروض -->
+        <button type="button" class="modal-trigger-btn trigger-highlight" onclick="openPortalModal('modalOffers')" aria-haspopup="dialog" aria-controls="modalOffers">
+          <div class="trigger-btn-icon-wrap trigger-icon-offers">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+            </svg>
+          </div>
+          <span class="trigger-btn-title">جديدنا والعروض</span>
+          <span class="trigger-btn-subtitle">البث والاستراحة والتطوير</span>
+        </button>
       </div>
-    </section>
-
-    <!-- Sell Points Section (نقاط البيع) -->
-    <section class="secondary-card sell-section" id="sell-section">
-      <h3 class="section-title">
-        <span class="title-gem">📍</span> نقاط البيع المعتمدة
-      </h3>
-      <ul class="points-list">
-        <li>جميع البقالات والمراكز التجارية المحيطة بالشبكة</li>
-        <li>مركز خدمة العملاء ونقاط التوزيع المعتمدة</li>
-      </ul>
-    </section>
-
-    <!-- Services Section (خدماتنا) -->
-    <section class="secondary-card services-section" id="services-section">
-      <h3 class="section-title">
-        <span class="title-gem">⭐</span> خدماتنا المميزة
-      </h3>
-      <p class="service-desc">استمتع بخدمة سلفني المتاحة في حال نفاد رصيد كرتك للتواصل الفوري</p>
-      <a href="self.html" class="service-btn">اضغط هنا لمعرفة التفاصيل</a>
     </section>
 
     <!-- Footer -->
     <footer class="portal-footer" id="fo">
       <a href="https://fb.com/Almo7aya" style="display:none;" aria-hidden="true"></a>
-      <p>شبكة الحدث نت اللاسلكية &copy; جميع الحقوق محفوظة</p>
+      <p>شبكة الأحمدي نت اللاسلكية &copy; جميع الحقوق محفوظة</p>
       <p class="eng-credit">تركيب وصيانة وتطوير الشبكات اللاسلكية</p>
     </footer>
   </main>
+
+  <!-- =========================================================================
+       MODAL 1: نقاط البيع ومراكز التوزيع في نطاق الشبكة
+       ========================================================================= -->
+  <div class="portal-modal-backdrop" id="modalPoints" role="dialog" aria-modal="true" aria-labelledby="modalPointsTitle" onclick="handleBackdropClick(event, 'modalPoints')">
+    <div class="portal-modal-dialog">
+      <!-- Header -->
+      <div class="modal-header">
+        <div class="modal-header-titles">
+          <div class="modal-header-icon trigger-icon-points">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+              <circle cx="12" cy="10" r="3"></circle>
+            </svg>
+          </div>
+          <div class="modal-title-text">
+            <h3 id="modalPointsTitle">نقاط البيع ومراكز التوزيع</h3>
+            <p>مراكز التسوق ونقاط التوزيع الموجودة في نطاق الشبكة</p>
+          </div>
+        </div>
+        <button type="button" class="modal-close-btn" onclick="closePortalModal('modalPoints')" aria-label="إغلاق النافذة">&times;</button>
+      </div>
+
+      <!-- Scrollable Body -->
+      <div class="modal-body">
+        <div class="modal-info-card modal-card-highlight">
+          <div class="modal-card-badge">متوفرة 24/7</div>
+          <h4 class="modal-card-title">🏬 مراكز التسوق والسوبرماركت</h4>
+          <p class="modal-card-text">
+            تتوفر كروت شبكة الأحمدي نت اللاسلكية بكافة فئاتها في مراكز التسوق والسوبرماركت والتموينات الموجودة ضمن نطاق تغطية الشبكة:
+          </p>
+          <ul class="modal-card-list">
+            <li>مراكز التسوق والسوبرماركت في الشارع التجاري والحي الرئيسي</li>
+            <li>المحلات التموينية ومحلات المواد الغذائية في محيط تغطية الشبكة</li>
+          </ul>
+        </div>
+
+        <div class="modal-info-card">
+          <h4 class="modal-card-title">📍 نقاط التوزيع المعتمدة في نطاق الشبكة</h4>
+          <p class="modal-card-text">
+            يمكنكم الحصول على الكروت وشحن الرصيد من نقاط التوزيع المعتمدة المنتشرة قرب مواقع وأبراج البث:
+          </p>
+          <ul class="modal-card-list">
+            <li>نقاط التوزيع والبقالات المعتمدة بجوار أبراج البث والتغطية</li>
+            <li>محلات الإلكترونيات والاتصالات وخدمات الموبايل في نطاق الشبكة</li>
+          </ul>
+        </div>
+
+        <div class="modal-info-card">
+          <h4 class="modal-card-title">📞 للاستفسار أو طلب كروت</h4>
+          <p class="modal-card-text">
+            للاستفسار عن أقرب مركز تسوق أو نقطة توزيع في منطقتك، يرجى التواصل معنا:
+          </p>
+          <div class="modal-actions-group">
+            <a href="tel:773836594" class="modal-action-btn crimson-btn">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+              </svg>
+              اتصال: 773836594
+            </a>
+            <a href="https://wa.me/967773836594" target="_blank" rel="noopener noreferrer" class="modal-action-btn green-btn">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+                <path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91C2.13 13.66 2.59 15.36 3.45 16.86L2.05 22L7.3 20.62C8.75 21.41 10.38 21.83 12.04 21.83C17.5 21.83 21.95 17.38 21.95 11.92C21.95 9.27 20.92 6.78 19.05 4.91C17.18 3.03 14.69 2 12.04 2M12.05 3.67C14.25 3.67 16.31 4.53 17.87 6.09C19.42 7.65 20.28 9.72 20.28 11.92C20.28 16.46 16.58 20.15 12.04 20.15C10.56 20.15 9.11 19.76 7.85 19.02L7.55 18.84L4.44 19.65L5.27 16.62L5.07 16.31C4.24 14.99 3.81 13.47 3.81 11.91C3.81 7.37 7.5 3.67 12.05 3.67Z"/>
+              </svg>
+              مراسلة واتساب
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="modal-footer">
+        <button type="button" class="modal-footer-close-btn" onclick="closePortalModal('modalPoints')">إغلاق النافذة</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       MODAL 2: باقات وأسعار الكروت (فقط الجدول)
+       ========================================================================= -->
+  <div class="portal-modal-backdrop" id="modalPrices" role="dialog" aria-modal="true" aria-labelledby="modalPricesTitle" onclick="handleBackdropClick(event, 'modalPrices')">
+    <div class="portal-modal-dialog">
+      <!-- Header -->
+      <div class="modal-header">
+        <div class="modal-header-titles">
+          <div class="modal-header-icon trigger-icon-prices">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="6 2 18 2 22 7 12 22 2 7 6 2"></polygon>
+              <line x1="2" y1="7" x2="22" y2="7"></line>
+              <line x1="12" y1="22" x2="12" y2="7"></line>
+            </svg>
+          </div>
+          <div class="modal-title-text">
+            <h3 id="modalPricesTitle">باقات وأسعار الكروت</h3>
+            <p>جدول فئات وباقات كروت شبكة الأحمدي نت</p>
+          </div>
+        </div>
+        <button type="button" class="modal-close-btn" onclick="closePortalModal('modalPrices')" aria-label="إغلاق النافذة">&times;</button>
+      </div>
+
+      <!-- Scrollable Body (تعرض فقط الجدول) -->
+      <div class="modal-body">
+        <div class="modal-info-card" style="margin-bottom: 0;">
+          <div class="table-responsive">
+            <table class="styled-prices-table">
+              <thead>
+                <tr>
+                  <th>السعر</th>
+                  <th>المدة</th>
+                  <th>الصلاحية</th>
+                  <th>التحميل</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="price-cell">100 ريال</td>
+                  <td>5 ساعات</td>
+                  <td>5 أيام</td>
+                  <td>400 MB</td>
+                </tr>
+                <tr>
+                  <td class="price-cell">200 ريال</td>
+                  <td>10 ساعات</td>
+                  <td>5 أيام</td>
+                  <td>800 MB</td>
+                </tr>
+                <tr>
+                  <td class="price-cell">250 ريال</td>
+                  <td>15 ساعة</td>
+                  <td>10 أيام</td>
+                  <td>1024 MB</td>
+                </tr>
+                <tr>
+                  <td class="price-cell">500 ريال</td>
+                  <td>30 ساعة</td>
+                  <td>20 يوم</td>
+                  <td>2 GB</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="modal-footer">
+        <button type="button" class="modal-footer-close-btn" onclick="closePortalModal('modalPrices')">إغلاق النافذة</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       MODAL 3: جديدنا والعروض (البث المباشر - الاستراحة - التطوير مستمر)
+       (بدون أزرار إطلاقاً)
+       ========================================================================= -->
+  <div class="portal-modal-backdrop" id="modalOffers" role="dialog" aria-modal="true" aria-labelledby="modalOffersTitle" onclick="handleBackdropClick(event, 'modalOffers')">
+    <div class="portal-modal-dialog">
+      <!-- Header -->
+      <div class="modal-header">
+        <div class="modal-header-titles">
+          <div class="modal-header-icon trigger-icon-offers">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+            </svg>
+          </div>
+          <div class="modal-title-text">
+            <h3 id="modalOffersTitle">جديدنا والعروض</h3>
+            <p>البث المباشر • سيرفر الاستراحة • التطوير مستمر</p>
+          </div>
+        </div>
+        <button type="button" class="modal-close-btn" onclick="closePortalModal('modalOffers')" aria-label="إغلاق النافذة">&times;</button>
+      </div>
+
+      <!-- Scrollable Body (معلومات فقط وبدون أزرار) -->
+      <div class="modal-body">
+        <!-- Live Sports Broadcast -->
+        <div class="modal-info-card modal-card-highlight">
+          <h4 class="modal-card-title">⚽ البث المباشر للمباريات</h4>
+          <p class="modal-card-text">
+            متابعة البث المباشر لكافة مباريات كرة القدم والبطولات والدوريات الرياضية العالمية الكبرى بجودة بث عالية ودون تقطيع، وبشكل مجاني تماماً لمشتركي شبكة الأحمدي نت ودون أي استهلاك من رصيد الكرت.
+          </p>
+        </div>
+
+        <!-- Al-Istiraha Server -->
+        <div class="modal-info-card">
+          <h4 class="modal-card-title">🎬 سيرفر الاستراحة والترفيه</h4>
+          <p class="modal-card-text">
+            مكتبة سينمائية وترفيهية محلية ضخمة تضم أحدث الأفلام والمسلسلات العربية والعالمية وبرامج الأطفال والكرتون بأعلى دقة، متاحة مجاناً لجميع مشتركي الشبكة بأقصى سرعة وبدون استهلاك للبيانات.
+          </p>
+        </div>
+
+        <!-- Continuous Development -->
+        <div class="modal-info-card">
+          <h4 class="modal-card-title">🚀 التطوير والتحسين المستمر</h4>
+          <p class="modal-card-text">
+            نعمل على مدار الساعة على تحديث وتطوير بنية الشبكة، ورفع سرعات البث، وتوسيع نطاق التغطية لتشمل مناطق أوسع، مع إضافة ميزات تقنية جديدة باستمرار لتقديم أفضل وأرقى خدمة تليق بمشتركينا الكرام.
+          </p>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="modal-footer">
+        <button type="button" class="modal-footer-close-btn" onclick="closePortalModal('modalOffers')">إغلاق النافذة</button>
+      </div>
+    </div>
+  </div>
 
   <!-- JS Scripts -->
   <script src="js/jquery.js" defer></script>
@@ -499,6 +681,41 @@
         yes.classList.add('active');
       }
     }
+
+    // Modern Modal Controller (نقاط البيع - أسعار الكروت - جديدنا والعروض)
+    function openPortalModal(modalId) {
+      var modal = document.getElementById(modalId);
+      if (!modal) return;
+      modal.classList.add('active');
+      document.body.classList.add('modal-open');
+    }
+
+    function closePortalModal(modalId) {
+      if (modalId) {
+        var modal = document.getElementById(modalId);
+        if (modal) modal.classList.remove('active');
+      } else {
+        var activeModals = document.querySelectorAll('.portal-modal-backdrop.active');
+        activeModals.forEach(function(m) { m.classList.remove('active'); });
+      }
+      var remaining = document.querySelectorAll('.portal-modal-backdrop.active');
+      if (remaining.length === 0) {
+        document.body.classList.remove('modal-open');
+      }
+    }
+
+    function handleBackdropClick(event, modalId) {
+      if (event.target && event.target.id === modalId) {
+        closePortalModal(modalId);
+      }
+    }
+
+    // Keyboard support: Close modal on Escape
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape' || e.key === 'Esc') {
+        closePortalModal();
+      }
+    });
   </script>
 </body>
 </html>
