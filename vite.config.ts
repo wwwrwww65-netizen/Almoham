@@ -4,70 +4,33 @@ import fs from 'fs';
 import path from 'path';
 import {defineConfig} from 'vite';
 
-export default defineConfig(() => {
-  return {
-    plugins: [
-      {
-        name: 'raw-static-serve',
-        transformIndexHtml(html) {
-          const shim = `
+const SHIM_SCRIPT = `
 <script id="mikrotik-server-shim">
-  window.checkCookie = window.checkCookie || function() {
-    if (typeof getCookie2 === 'function') {
-      try { getCookie2(); } catch(e) {}
-    }
+  // Simulator error and dialog guards
+  window.alert = function(msg) { console.log('[Alert]:', msg); };
+  window.confirm = function() { return true; };
+  window.checkCookie = function() {};
+  window.getCookie2 = function() {};
+  window.openLogin = function() { return true; };
+  window.delrem = function() {
+    try {
+      document.cookie = 'uname=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/';
+      document.cookie = 'username=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/';
+      document.cookie = 'error=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/';
+    } catch(e) {}
+    return true;
   };
-  window.hotspotConfig = window.hotspotConfig || {
-    'enable-hot-cookie': 0,
-    'app-store-base-url': ''
-  };
-  window.rem = window.rem || function() {};
-</script>`;
-          if (html.includes('<head>')) {
-            return html.replace('<head>', '<head>' + shim);
-          }
-          if (html.includes('<head ')) {
-            return html.replace(/(<head[^>]*>)/, '$1' + shim);
-          }
-          return shim + html;
-        },
-        configureServer(server) {
-          server.middlewares.use((req, res, next) => {
-            const rawUrl = req.url ? req.url.split('?')[0] : '';
-            const url = decodeURIComponent(rawUrl);
+  window.doLogin = function() { return true; };
+  window.openAdvert = function() { return true; };
 
-            // Intercept and inject shim into all HTML responses
-            if (url.endsWith('.html') || url === '/') {
-              let targetHtmlPath = url === '/' ? path.join(__dirname, 'index.html') : path.join(__dirname, url);
-              if (!fs.existsSync(targetHtmlPath)) {
-                targetHtmlPath = path.join(__dirname, 'yyyy', url.replace(/^\//, ''));
-              }
-              if (fs.existsSync(targetHtmlPath) && fs.statSync(targetHtmlPath).isFile()) {
-                let content = fs.readFileSync(targetHtmlPath, 'utf8');
+  window.addEventListener('error', function(e) {
+    if (e.preventDefault) e.preventDefault();
+    return true;
+  });
+  window.addEventListener('unhandledrejection', function(e) {
+    if (e.preventDefault) e.preventDefault();
+  });
 
-                // Simulate MikroTik RouterOS variable replacement on-the-fly
-                content = content
-                  .replace(/\$\(link-login-only\)/g, '/login')
-                  .replace(/\$\(link-login\)/g, '/login')
-                  .replace(/\$\(link-status\)/g, '/status.html')
-                  .replace(/\$\(link-logout\)/g, '/logout')
-                  .replace(/\$\(link-orig\)/g, '/status.html')
-                  .replace(/\$\(error\)/g, '')
-                  .replace(/\$\(ip\)/g, '192.168.88.25')
-                  .replace(/\$\(mac\)/g, 'BC:24:11:45:67:89')
-                  .replace(/\$\(username\)/g, 'المشترك')
-                  .replace(/\$\(uptime\)/g, '02:45:10')
-                  .replace(/\$\(bytes-in-nice\)/g, '124.5 MB')
-                  .replace(/\$\(bytes-out-nice\)/g, '350.2 MB')
-                  .replace(/\$\(session-time-left\)/g, '4h 15m')
-                  .replace(/\$\(remain-bytes-total\)/g, '524288000')
-                  .replace(/\$\(refresh-timeout-secs\)/g, '60')
-                  .replace(/\$\(if chap-id\)[\s\S]*?\$\(endif\)/g, '')
-                  .replace(/\$\(if error\)[\s\S]*?\$\(endif\)/g, '');
-
-                const shim = `
-<script id="mikrotik-server-shim">
-  window.checkCookie = window.checkCookie || function() {};
   window.hotspotConfig = window.hotspotConfig || {
     'enable-hot-cookie': 0,
     'app-store-base-url': ''
@@ -102,6 +65,12 @@ export default defineConfig(() => {
       u.addEventListener('input', function() { hidden.value = u.value; });
       if (u.form) u.form.appendChild(hidden);
     }
+    if (!document.getElementById('ChangeProfByAlnesrNetwork')) {
+      var d = document.createElement('div');
+      d.id = 'ChangeProfByAlnesrNetwork';
+      d.style.display = 'none';
+      document.body.appendChild(d);
+    }
     var forms = document.querySelectorAll('form');
     forms.forEach(function(f) {
       if (!f.action || f.action.includes('link-login') || f.action.includes('$(')) {
@@ -111,16 +80,73 @@ export default defineConfig(() => {
   });
 </script>
 `;
+
+export default defineConfig(() => {
+  return {
+    plugins: [
+      {
+        name: 'raw-static-serve',
+        transformIndexHtml(html) {
+          if (html.includes('<head>')) {
+            return html.replace('<head>', '<head>' + SHIM_SCRIPT);
+          }
+          if (html.includes('<head ')) {
+            return html.replace(/(<head[^>]*>)/, '$1' + SHIM_SCRIPT);
+          }
+          return SHIM_SCRIPT + html;
+        },
+        configureServer(server) {
+          server.middlewares.use(async (req, res, next) => {
+            const rawUrl = req.url ? req.url.split('?')[0] : '';
+            const url = decodeURIComponent(rawUrl);
+
+            // Intercept and inject shim into all HTML responses
+            if (url.endsWith('.html') || url === '/') {
+              let targetHtmlPath = url === '/' ? path.join(__dirname, 'index.html') : path.join(__dirname, url);
+              if (!fs.existsSync(targetHtmlPath)) {
+                targetHtmlPath = path.join(__dirname, 'yyyy', url.replace(/^\//, ''));
+              }
+              if (fs.existsSync(targetHtmlPath) && fs.statSync(targetHtmlPath).isFile()) {
+                let content = fs.readFileSync(targetHtmlPath, 'utf8');
+
+                // Simulate MikroTik RouterOS variable replacement on-the-fly
+                content = content
+                  .replace(/\$\(link-login-only\)/g, '/login')
+                  .replace(/\$\(link-login\)/g, '/login')
+                  .replace(/\$\(link-status\)/g, '/status.html')
+                  .replace(/\$\(link-logout\)/g, '/logout')
+                  .replace(/\$\(link-orig\)/g, '/status.html')
+                  .replace(/\$\(error\)/g, '')
+                  .replace(/\$\(ip\)/g, '192.168.88.25')
+                  .replace(/\$\(mac\)/g, 'BC:24:11:45:67:89')
+                  .replace(/\$\(username\)/g, 'المشترك')
+                  .replace(/\$\(uptime\)/g, '02:45:10')
+                  .replace(/\$\(bytes-in-nice\)/g, '124.5 MB')
+                  .replace(/\$\(bytes-out-nice\)/g, '350.2 MB')
+                  .replace(/\$\(session-time-left\)/g, '4h 15m')
+                  .replace(/\$\(remain-bytes-total\)/g, '524288000')
+                  .replace(/\$\(refresh-timeout-secs\)/g, '60')
+                  .replace(/\$\(if chap-id\)[\s\S]*?\$\(endif\)/g, '')
+                  .replace(/\$\(if error\)[\s\S]*?\$\(endif\)/g, '');
+
                 if (content.includes('<head>')) {
-                  content = content.replace('<head>', '<head>' + shim);
+                  content = content.replace('<head>', '<head>' + SHIM_SCRIPT);
                 } else if (content.includes('<head ')) {
-                  content = content.replace(/(<head[^>]*>)/, '$1' + shim);
+                  content = content.replace(/(<head[^>]*>)/, '$1' + SHIM_SCRIPT);
                 } else {
-                  content = shim + content;
+                  content = SHIM_SCRIPT + content;
                 }
-                res.setHeader('Content-Type', 'text/html; charset=utf-8');
-                res.end(content);
-                return;
+
+                try {
+                  const transformed = await server.transformIndexHtml(url, content);
+                  res.setHeader('Content-Type', 'text/html; charset=utf-8');
+                  res.end(transformed);
+                  return;
+                } catch(err) {
+                  res.setHeader('Content-Type', 'text/html; charset=utf-8');
+                  res.end(content);
+                  return;
+                }
               }
             }
 
