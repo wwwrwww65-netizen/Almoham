@@ -83,6 +83,7 @@ const SHIM_SCRIPT = `
 
 export default defineConfig(() => {
   return {
+    publicDir: false,
     plugins: [
       {
         name: 'raw-static-serve',
