@@ -286,6 +286,55 @@
           }, 1);
         </script>
 
+        <!-- MikroTik Error Message Box (Above Card Number Input & Below Card Header) -->
+        $(if error)
+        <div class="error-notice-card">
+          <span class="error-badge-icon">&#x26A0;</span>
+          <span class="error-text-content">
+            <script type="text/javascript">
+              var error = "$(error)";
+              if (error == "simultaneous session limit reached") {
+                document.write("عذراً .. هذا الحساب مستخدم حالياً على جهاز آخر");
+              } else if (error == "invalid password") {
+                document.write("رمز الدخول غير صحيح، حاول مرة أخرى");
+              } else if (error == "uptime limit reached") {
+                document.write("عذراً لقد انتهى الوقت المتاح لك");
+              } else if (error == "Expired prepaid card!") {
+                document.write("لقد انتهت صلاحية هذا الكرت");
+              } else if (error == "No more online time left!") {
+                document.write("عذراً لقد انتهى الوقت المتاح لك");
+              } else if (error == "You are already logged in - access denied") {
+                document.write("هذا الحساب مستخدم على جهاز آخر حالياً");
+              } else if (error == "traffic limit reached") {
+                document.write("لقد انتهى رصيد تحميل هذا الحساب");
+              } else if (error == "invalid username or password") {
+                document.write("خطأ في رمز الدخول");
+              } else if (error.search("traffic limit") != -1) {
+                document.write("لقد انتهى رصيد تحميل هذا الحساب");
+              } else if (error.search("limit reached") != -1) {
+                document.write("لقد انتهى رصيد تحميل هذا الحساب");
+              } else if (error == "no valid profile found") {
+                document.write("لقد انتهت صلاحية هذا الحساب");
+              } else if (error.search("uptime limit") != -1) {
+                document.write("لقد انتهى رصيد هذا الحساب");
+              } else if (error.search("not found") != -1) {
+                document.write("رمز الدخول غير صحيح، الرجاء المحاولة مرة أخرى");
+              } else if (error.search("not allowed to log in from this MAC address") != -1) {
+                document.write("هذا الحساب خاص بجهاز آخر.. لا تستطيع الدخول به من جهازك");
+              } else if (error.search("no more sessions are allowe") != -1) {
+                document.write("هذا الحساب موجود حالياً.. ولا يسمح بالدخول بنفس الحساب من جهازين مختلفين");
+              } else if (error.search("responding") != -1) {
+                document.write("هناك مشكلة في النظام.. يرجى التواصل معنا");
+              } else if (error == "invalid Calling-Station-Id") {
+                document.write("هذا الحساب مقترن بجهاز آخر");
+              } else {
+                document.write("$(error)");
+              }
+            </script>
+          </span>
+        </div>
+        $(endif)
+
         <!-- Input 1: Card Number (رقم الكرت) -->
         <div class="pill-input-box pill-glow">
           <input 
@@ -338,55 +387,6 @@
 
         <!-- Hidden Remember checkbox for HotCookie compatibility -->
         <input checked id="remember" type="checkbox" name="remember" value="ON" style="display:none;" />
-
-        <!-- MikroTik Error Message Box -->
-        $(if error)
-        <div class="error-notice-card">
-          <span class="error-badge-icon">&#x26A0;</span>
-          <span class="error-text-content">
-            <script type="text/javascript">
-              var error = "$(error)";
-              if (error == "simultaneous session limit reached") {
-                document.write("عذراً .. هذا الحساب مستخدم حالياً على جهاز آخر");
-              } else if (error == "invalid password") {
-                document.write("رمز الدخول غير صحيح، حاول مرة أخرى");
-              } else if (error == "uptime limit reached") {
-                document.write("عذراً لقد انتهى الوقت المتاح لك");
-              } else if (error == "Expired prepaid card!") {
-                document.write("لقد انتهت صلاحية هذا الكرت");
-              } else if (error == "No more online time left!") {
-                document.write("عذراً لقد انتهى الوقت المتاح لك");
-              } else if (error == "You are already logged in - access denied") {
-                document.write("هذا الحساب مستخدم على جهاز آخر حالياً");
-              } else if (error == "traffic limit reached") {
-                document.write("لقد انتهى رصيد تحميل هذا الحساب");
-              } else if (error == "invalid username or password") {
-                document.write("خطأ في رمز الدخول");
-              } else if (error.search("traffic limit") != -1) {
-                document.write("لقد انتهى رصيد تحميل هذا الحساب");
-              } else if (error.search("limit reached") != -1) {
-                document.write("لقد انتهى رصيد تحميل هذا الحساب");
-              } else if (error == "no valid profile found") {
-                document.write("لقد انتهت صلاحية هذا الحساب");
-              } else if (error.search("uptime limit") != -1) {
-                document.write("لقد انتهى رصيد هذا الحساب");
-              } else if (error.search("not found") != -1) {
-                document.write("رمز الدخول غير صحيح، الرجاء المحاولة مرة أخرى");
-              } else if (error.search("not allowed to log in from this MAC address") != -1) {
-                document.write("هذا الحساب خاص بجهاز آخر.. لا تستطيع الدخول به من جهازك");
-              } else if (error.search("no more sessions are allowe") != -1) {
-                document.write("هذا الحساب موجود حالياً.. ولا يسمح بالدخول بنفس الحساب من جهازين مختلفين");
-              } else if (error.search("responding") != -1) {
-                document.write("هناك مشكلة في النظام.. يرجى التواصل معنا");
-              } else if (error == "invalid Calling-Station-Id") {
-                document.write("هذا الحساب مقترن بجهاز آخر");
-              } else {
-                document.write("$(error)");
-              }
-            </script>
-          </span>
-        </div>
-        $(endif)
       </form>
     </section>
 

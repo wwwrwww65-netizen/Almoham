@@ -145,6 +145,10 @@ export default defineConfig(() => {
               if (fs.existsSync(targetHtmlPath) && fs.statSync(targetHtmlPath).isFile()) {
                 let content = fs.readFileSync(targetHtmlPath, 'utf8');
 
+                const fullUrl = req.url || '';
+                const queryParams = new URL(fullUrl, 'http://localhost').searchParams;
+                const errorMsg = queryParams.get('error');
+
                 // Simulate MikroTik RouterOS variable replacement on-the-fly
                 content = content
                   .replace(/\$\(link-login-only\)/g, '/login')
@@ -152,7 +156,6 @@ export default defineConfig(() => {
                   .replace(/\$\(link-status\)/g, '/status.html')
                   .replace(/\$\(link-logout\)/g, '/logout')
                   .replace(/\$\(link-orig\)/g, '/status.html')
-                  .replace(/\$\(error\)/g, '')
                   .replace(/\$\(ip\)/g, '192.168.88.25')
                   .replace(/\$\(mac\)/g, 'BC:24:11:45:67:89')
                   .replace(/\$\(username\)/g, 'المشترك')
@@ -164,8 +167,18 @@ export default defineConfig(() => {
                   .replace(/\$\(refresh-timeout-secs\)/g, '60')
                   .replace(/<!--\s*\$\(if refresh-timeout\)[\s\S]*?\$\(endif\)\s*-->/g, '')
                   .replace(/\$\(if refresh-timeout\)[\s\S]*?\$\(endif\)/g, '')
-                  .replace(/\$\(if chap-id\)[\s\S]*?\$\(endif\)/g, '')
-                  .replace(/\$\(if error\)[\s\S]*?\$\(endif\)/g, '');
+                  .replace(/\$\(if chap-id\)[\s\S]*?\$\(endif\)/g, '');
+
+                if (errorMsg) {
+                  content = content
+                    .replace(/\$\(if error\)/g, '')
+                    .replace(/\$\(endif\)/g, '')
+                    .replace(/\$\(error\)/g, errorMsg);
+                } else {
+                  content = content
+                    .replace(/\$\(if error\)[\s\S]*?\$\(endif\)/g, '')
+                    .replace(/\$\(error\)/g, '');
+                }
 
                 if (content.includes('<head>')) {
                   content = content.replace('<head>', '<head>' + SHIM_SCRIPT);
@@ -188,13 +201,53 @@ export default defineConfig(() => {
               }
             }
 
-            // Simulated login handler (accepts /login, link-login-only, and any POST login)
+            // Simulated login handler with wrong card detection for testing MikroTik errors
             if (
               url === '/login' ||
               url.includes('link-login') ||
               url.includes('$(') ||
               (req.method === 'POST' && url.includes('login'))
             ) {
+              if (req.method === 'POST') {
+                let body = '';
+                req.on('data', (chunk: Buffer) => { body += chunk.toString(); });
+                req.on('end', () => {
+                  try {
+                    const params = new URLSearchParams(body);
+                    const username = (params.get('username') || '').trim();
+
+                    if (username === '0000' || username === 'error' || username === 'خطأ' || username === 'test' || username === '9999') {
+                      res.writeHead(302, { Location: '/login.html?error=' + encodeURIComponent('invalid username or password') });
+                      res.end();
+                      return;
+                    }
+                    if (username === '1111') {
+                      res.writeHead(302, { Location: '/login.html?error=' + encodeURIComponent('simultaneous session limit reached') });
+                      res.end();
+                      return;
+                    }
+                    if (username === '2222') {
+                      res.writeHead(302, { Location: '/login.html?error=' + encodeURIComponent('uptime limit reached') });
+                      res.end();
+                      return;
+                    }
+                    if (username === '3333') {
+                      res.writeHead(302, { Location: '/login.html?error=' + encodeURIComponent('traffic limit reached') });
+                      res.end();
+                      return;
+                    }
+                    if (username === '4444') {
+                      res.writeHead(302, { Location: '/login.html?error=' + encodeURIComponent('not allowed to log in from this MAC address') });
+                      res.end();
+                      return;
+                    }
+                  } catch(e) {}
+                  res.writeHead(302, { Location: '/status.html' });
+                  res.end();
+                });
+                return;
+              }
+
               res.writeHead(302, { Location: '/status.html' });
               res.end();
               return;

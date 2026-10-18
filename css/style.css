@@ -546,7 +546,8 @@ button {
 
 /* Error Notice Card */
 .error-notice-card {
-  margin-top: 18px;
+  margin-top: 6px;
+  margin-bottom: 16px;
   padding: 12px 14px;
   background: rgba(180, 10, 40, 0.45);
   border: 1px solid #ff2568;
