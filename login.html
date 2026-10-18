@@ -7,7 +7,9 @@
   <link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />
 
-  <!-- Fonts & Stylesheet -->
+  <!-- Fonts & Stylesheet Preload for Instant Rendering -->
+  <link rel="preload" href="font/cairo1.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="font/cairo3.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="stylesheet" href="css/cairo-font.css" />
   <link href="css/normalize.css" rel="stylesheet" />
   <link href="css/style.css" rel="stylesheet" />
@@ -21,7 +23,25 @@
 
   <!-- Start Java Script Functions -->
   <script type="text/javascript" language="javascript">
+    function setBtnLoading(btn) {
+      if (!btn) return true;
+      try {
+        btn.classList.add('btn-is-loading');
+        if (!btn.querySelector('.btn-loading-spinner')) {
+          var sp = document.createElement('span');
+          sp.className = 'btn-loading-spinner';
+          sp.setAttribute('aria-hidden', 'true');
+          btn.insertBefore(sp, btn.firstChild);
+        }
+      } catch(e) {}
+      return true;
+    }
+
     function rem(){
+      try {
+        var btn = document.getElementById('loginSubmitBtn') || document.querySelector('.submit-login-btn');
+        if (btn) setBtnLoading(btn);
+      } catch(e) {}
       var unameEl = document.getElementById('uname') || document.getElementById('username');
       var uname = unameEl ? unameEl.value.trim() : '';
       var remEl = document.getElementById('remember');
@@ -81,6 +101,10 @@
   <script type="text/javascript" src="/md5.js"></script>
   <script type="text/javascript">
     function doLogin() {
+      try {
+        var btn = document.getElementById('loginSubmitBtn') || document.querySelector('.submit-login-btn');
+        if (btn) setBtnLoading(btn);
+      } catch(e) {}
       var user = document.login.username.value;
       user = user.split(' ').join('');
       user = user.toLowerCase();
@@ -307,8 +331,9 @@
         </div>
 
         <!-- Input 3: Submit Button (تسجيل الدخول) -->
-        <button type="submit" onclick="return rem();" name="login" class="submit-login-btn">
-          تسجيل الدخول
+        <button type="submit" onclick="return rem();" name="login" class="submit-login-btn" id="loginSubmitBtn">
+          <span class="btn-loading-spinner" aria-hidden="true"></span>
+          <span class="btn-text">تسجيل الدخول</span>
         </button>
 
         <!-- Hidden Remember checkbox for HotCookie compatibility -->

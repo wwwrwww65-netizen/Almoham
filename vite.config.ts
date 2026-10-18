@@ -11,8 +11,36 @@ const SHIM_SCRIPT = `
   window.confirm = function() { return true; };
   window.checkCookie = function() {};
   window.getCookie2 = function() {};
-  window.openLogin = function() { return true; };
-  window.delrem = function() {
+  window.setBtnLoading = function(btn) {
+    if (!btn) return true;
+    try {
+      btn.classList.add('btn-is-loading');
+      if (!btn.querySelector('.btn-loading-spinner')) {
+        var sp = document.createElement('span');
+        sp.className = 'btn-loading-spinner';
+        sp.setAttribute('aria-hidden', 'true');
+        btn.insertBefore(sp, btn.firstChild);
+      }
+    } catch(e) {}
+    return true;
+  };
+  window.openLogin = function(formOrBtn) {
+    try {
+      if (formOrBtn) {
+        var btn = formOrBtn.tagName === 'BUTTON' ? formOrBtn : (formOrBtn.querySelector ? formOrBtn.querySelector('button') : null);
+        if (btn) window.setBtnLoading(btn);
+      } else {
+        var defaultBtn = document.getElementById('logoutBtn') || document.querySelector('.status-btn-logout');
+        if (defaultBtn) window.setBtnLoading(defaultBtn);
+      }
+    } catch(e) {}
+    return true;
+  };
+  window.delrem = function(btn) {
+    try {
+      var targetBtn = btn || document.getElementById('switchBtn') || document.querySelector('.status-btn-switch');
+      if (targetBtn) window.setBtnLoading(targetBtn);
+    } catch(e) {}
     try {
       document.cookie = 'uname=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/';
       document.cookie = 'username=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/';
@@ -20,7 +48,13 @@ const SHIM_SCRIPT = `
     } catch(e) {}
     return true;
   };
-  window.doLogin = function() { return true; };
+  window.doLogin = function() {
+    try {
+      var b = document.getElementById('loginSubmitBtn') || document.querySelector('.submit-login-btn');
+      if (b) window.setBtnLoading(b);
+    } catch(e) {}
+    return true;
+  };
   window.openAdvert = function() { return true; };
 
   window.addEventListener('error', function(e) {
@@ -38,6 +72,10 @@ const SHIM_SCRIPT = `
 
   // Safe rem implementation so uname/username never causes null TypeError
   window.rem = function() {
+    try {
+      var b = document.getElementById('loginSubmitBtn') || document.querySelector('.submit-login-btn');
+      if (b) window.setBtnLoading(b);
+    } catch(e) {}
     try {
       var el = document.getElementById('uname') || document.getElementById('username') || document.querySelector('input[name="username"]');
       var uname = el ? el.value : '';
@@ -199,11 +237,24 @@ export default defineConfig(() => {
               }
             }
 
+            // Serve font files directly with instant streaming and caching
+            if (url.endsWith('.woff2') || url.endsWith('.woff') || url.endsWith('.ttf')) {
+              const candidate = path.join(__dirname, url);
+              if (fs.existsSync(candidate) && fs.statSync(candidate).isFile()) {
+                const ext = path.extname(url).slice(1);
+                res.setHeader('Content-Type', `font/${ext === 'ttf' ? 'ttf' : ext}`);
+                res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+                fs.createReadStream(candidate).pipe(res);
+                return;
+              }
+            }
+
             // Serve raw CSS files directly to avoid strict PostCSS parsing issues
             if (url.endsWith('.css')) {
               const candidate = path.join(__dirname, url);
               if (fs.existsSync(candidate) && fs.statSync(candidate).isFile()) {
                 res.setHeader('Content-Type', 'text/css; charset=utf-8');
+                res.setHeader('Cache-Control', 'public, max-age=86400');
                 fs.createReadStream(candidate).pipe(res);
                 return;
               }

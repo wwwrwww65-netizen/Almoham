@@ -13,7 +13,9 @@
   <link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />
 
-  <!-- Fonts & Stylesheet -->
+  <!-- Fonts & Stylesheet Preload for Instant Rendering -->
+  <link rel="preload" href="font/cairo1.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="font/cairo3.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="stylesheet" href="css/cairo-font.css" />
   <link href="css/normalize.css" rel="stylesheet" />
   <link href="css/style.css" rel="stylesheet" />
@@ -28,11 +30,38 @@
       return (bytes / Math.pow(1024, Math.floor(e))).toFixed(2) + " " + s[e];
     }
 
-    function openLogin() {
+    function setBtnLoading(btn) {
+      if (!btn) return true;
+      try {
+        btn.classList.add('btn-is-loading');
+        if (!btn.querySelector('.btn-loading-spinner')) {
+          var sp = document.createElement('span');
+          sp.className = 'btn-loading-spinner';
+          sp.setAttribute('aria-hidden', 'true');
+          btn.insertBefore(sp, btn.firstChild);
+        }
+      } catch(e) {}
       return true;
     }
 
-    function delrem() {
+    function openLogin(formOrBtn) {
+      try {
+        if (formOrBtn) {
+          var btn = formOrBtn.tagName === 'BUTTON' ? formOrBtn : (formOrBtn.querySelector ? formOrBtn.querySelector('button') : null);
+          if (btn) setBtnLoading(btn);
+        } else {
+          var defaultBtn = document.getElementById('logoutBtn') || document.querySelector('.status-btn-logout');
+          if (defaultBtn) setBtnLoading(defaultBtn);
+        }
+      } catch(e) {}
+      return true;
+    }
+
+    function delrem(btn) {
+      try {
+        var targetBtn = btn || document.getElementById('switchBtn') || document.querySelector('.status-btn-switch');
+        if (targetBtn) setBtnLoading(targetBtn);
+      } catch(e) {}
       try {
         document.cookie = 'uname=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/';
         document.cookie = 'username=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/';
@@ -206,8 +235,8 @@
           <span class="tile-val highlight-violet">$(bytes-out-nice)</span>
         </div>
 
-        <!-- 6. عنوان الأي بي (IP Address) -->
-        <div class="status-info-tile" style="grid-column: 1 / -1; display: flex; flex-direction: row; justify-content: space-between; align-items: center; padding: 10px 16px;">
+        <!-- 6. عنوان الأي بي (IP Address) - مخفية بصرياً فقط -->
+        <div class="status-info-tile ip-info-tile-hidden" style="display: none;" aria-hidden="true">
           <div style="display: flex; align-items: center; gap: 8px;">
             <div class="tile-icon-wrap" style="width: 32px; height: 32px; margin-bottom: 0;">
               <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -226,25 +255,27 @@
       <!-- Action Buttons -->
       <div class="status-actions-row">
         <!-- Logout Button -->
-        <form action="$(link-logout)" name="login" onSubmit="return openLogin();" style="width:100%;">
-          <button type="submit" class="status-btn-logout">
-            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <form action="$(link-logout)" name="login" onSubmit="return openLogin(this);" style="width:100%;">
+          <button type="submit" onclick="setBtnLoading(this);" class="status-btn-logout" id="logoutBtn">
+            <span class="btn-loading-spinner" aria-hidden="true"></span>
+            <svg class="btn-action-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
               <polyline points="16 17 21 12 16 7"></polyline>
               <line x1="21" y1="12" x2="9" y2="12"></line>
             </svg>
-            تسجيل الخروج
+            <span class="btn-text">تسجيل الخروج</span>
           </button>
         </form>
 
         <!-- Switch Card Button -->
-        <form action="$(link-logout)" name="login" onSubmit="return openLogin();" style="width:100%;">
-          <button type="submit" onclick="return delrem();" class="status-btn-switch">
-            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <form action="$(link-logout)" name="login" onSubmit="return openLogin(this);" style="width:100%;">
+          <button type="submit" onclick="return delrem(this);" class="status-btn-switch" id="switchBtn">
+            <span class="btn-loading-spinner" aria-hidden="true"></span>
+            <svg class="btn-action-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <rect x="2" y="4" width="20" height="16" rx="3"></rect>
               <line x1="2" y1="10" x2="22" y2="10"></line>
             </svg>
-            تسجيل بكرت آخر
+            <span class="btn-text">تسجيل بكرت آخر</span>
           </button>
         </form>
       </div>
