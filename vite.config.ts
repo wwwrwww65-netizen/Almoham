@@ -254,7 +254,7 @@ export default defineConfig(() => {
               const candidate = path.join(__dirname, url);
               if (fs.existsSync(candidate) && fs.statSync(candidate).isFile()) {
                 res.setHeader('Content-Type', 'text/css; charset=utf-8');
-                res.setHeader('Cache-Control', 'public, max-age=86400');
+                res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
                 fs.createReadStream(candidate).pipe(res);
                 return;
               }
